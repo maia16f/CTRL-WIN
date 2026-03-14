@@ -36,10 +36,10 @@ export default function HomeScreen() {
   return (
     <ScrollView style={styles.container}>
       {/* Search Bar */}
-      <View style={styles.searchSection}>
-        <Ionicons name="search" size={20} color="#888" style={styles.searchIcon} />
-        <TextInput style={styles.input} placeholder="Search" />
-      </View>
+      {/*<View style={styles.searchSection}>*/}
+      {/*  <Ionicons name="search" size={20} color="#888" style={styles.searchIcon} />*/}
+      {/*  <TextInput style={styles.input} placeholder="Search" />*/}
+      {/*</View>*/}
 
       {/* Header */}
       <View style={styles.headerRow}>

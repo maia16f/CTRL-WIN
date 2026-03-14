@@ -1,0 +1,23 @@
+Pagina Home
+0. Autentificare/Logare cont
+1. Anunturi animale gasite
+2. Animale pierdute cu acces la pagina animale pierdute (scroll) cu posibilitatea de interactionare (vazut - apare pe harta Explorare /gasit - anunta stapanul + apare la anunturi animale gasite)
+3. Panou de adoptare animal - publica anunt cu "Adopta un animal" + vizualizare anunturi adopta animal -> redirectare la chat cu stapan
+--
+Pagina Explorare
+1. Iconite cu avertizare zona animal pierdut pana la 500m + notificare
+2. La interactionare cu iconita apare anuntul animalului pierdut cu informatiile utile ( tip animal, nume animal/stapan, data+ora ultimei zariri, zona pierduta
+3. Implementare serviciu de locatie a telefonului pentru a calcula animalele pierdute intr-o raza de 500 m.
+4. Impartire pe zone pentru a imbunatati localizarea
+
+--
+Pagina Add
+1. Adauga anunt cu animal pierdut
+2. Confirma anunt cu animal gasit
+
+Adauga anunt animal pierdut:
+- Apare pe harta ca animal pierdut
+
+*Click pe labuta- apare anunt animal pierdut cu informatii
+Confirma anunt cu animal gasit
+- Introdu zona gasirii + anunta stapanul
