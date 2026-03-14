@@ -1,119 +1,94 @@
-import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
-import { Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import React from 'react';
+import { Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { auth } from '../../firebaseConfig';
 
-export default function ChatScreen() {
-  const [message, setMessage] = useState('');
+export default function NotificationsScreen() {
+  const router = useRouter();
+
+  if (!auth.currentUser) {
+    return (
+      <View style={styles.centerContainer}>
+        <Text style={styles.authText}>Loghează-te pentru a vedea activitatea.</Text>
+        <TouchableOpacity style={styles.loginBtn} onPress={() => router.push('/auth')}>
+          <Text style={styles.loginBtnText}>Mergi la Logare</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
-    <KeyboardAvoidingView 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-      style={styles.container}
-    >
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity>
-          <Ionicons name="chevron-back" size={28} color="black" />
-        </TouchableOpacity>
-        <Image 
-          source={{ uri: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=100' }} 
-          style={styles.profilePic} 
-        />
-        <View style={styles.headerInfo}>
-          <Text style={styles.userName}>Helena Hills</Text>
-          <Text style={styles.activeStatus}>Active 11m ago</Text>
-        </View>
-        <View style={styles.headerIcons}>
-          <TouchableOpacity style={{ marginRight: 15 }}>
-            <Ionicons name="call-outline" size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Ionicons name="videocam-outline" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-      </View>
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={styles.title}>Activity</Text>
+        
+        <View style={styles.pill}><Text style={styles.pillText}>Messages</Text></View>
 
-      {/* Mesaje */}
-      <ScrollView style={styles.chatContainer} contentContainerStyle={{ paddingBottom: 20 }}>
-        <View style={styles.myMessageContainer}>
-          <View style={styles.myMessage}>
-            <Text style={styles.myMessageText}>Hi! I think you found my pet!!</Text>
+        {/* Notificarea 1 */}
+        <View style={styles.item}>
+          <View style={styles.dot} />
+          <Image source={{ uri: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100' }} style={styles.avatar} />
+          <View style={styles.textContainer}>
+            <Text style={styles.username}>starryskies23 <Text style={styles.time}>1d</Text></Text>
+            <Text style={styles.action}>Just messaged you!</Text>
           </View>
         </View>
 
-        <Text style={styles.timestamp}>Nov 30, 2023, 9:41 AM</Text>
-
-        <View style={styles.otherMessageRow}>
-          <Image source={{ uri: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=100' }} style={styles.miniPic} />
-          <View>
-            <View style={styles.otherMessage}><Text>Oh?</Text></View>
-            <View style={styles.otherMessage}><Text>Cool</Text></View>
-            <View style={styles.otherMessage}><Text>How does it work?</Text></View>
+        {/* Notificarea 2 */}
+        <View style={styles.item}>
+          <View style={styles.dot} />
+          <Image source={{ uri: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100' }} style={styles.avatar} />
+          <View style={styles.textContainer}>
+            <Text style={styles.username}>nebulanomad <Text style={styles.time}>1d</Text></Text>
+            <Text style={styles.action}>Just messaged you!</Text>
           </View>
         </View>
 
-        <View style={styles.myMessageContainer}>
-          <View style={styles.myMessage}>
-            <Text style={styles.myMessageText}>Well if you are from here, you can just send me your location or a meeting spot!</Text>
+        {/* Notificarea 3 */}
+        <View style={styles.item}>
+          <View style={styles.dot} />
+          <Image source={{ uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100' }} style={styles.avatar} />
+          <View style={styles.textContainer}>
+            <Text style={styles.username}>lunavoyager <Text style={styles.time}>3d</Text></Text>
+            <Text style={styles.action}>Saved your post</Text>
           </View>
-          <View style={[styles.myMessage, { marginTop: 5 }]}>
-            <Text style={styles.myMessageText}>And thank you so so much!</Text>
-          </View>
+          <Image source={{ uri: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=100' }} style={styles.postThumbnail} />
         </View>
+
+        {/* Notificarea 4 */}
+        <View style={styles.item}>
+          <View style={styles.dot} />
+          <Image source={{ uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100' }} style={styles.avatar} />
+          <View style={styles.textContainer}>
+            <Text style={styles.username}>shadowlynx <Text style={styles.time}>4d</Text></Text>
+            <Text style={styles.action}>Commented on your post</Text>
+            <Text style={styles.comment}>I think I saw him , message me!</Text>
+          </View>
+          <Image source={{ uri: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=100' }} style={styles.postThumbnail} />
+        </View>
+
       </ScrollView>
-
-      {/* Input de mesaj */}
-      <View style={styles.inputContainer}>
-        <View style={styles.inputWrapper}>
-          <TextInput 
-            style={styles.input} 
-            placeholder="Message..." 
-            value={message}
-            onChangeText={setMessage}
-          />
-          <TouchableOpacity><Ionicons name="mic-outline" size={24} color="#888" style={styles.inputIcon}/></TouchableOpacity>
-          <TouchableOpacity><Ionicons name="happy-outline" size={24} color="#888" style={styles.inputIcon}/></TouchableOpacity>
-          <TouchableOpacity><Ionicons name="image-outline" size={24} color="#888" style={styles.inputIcon}/></TouchableOpacity>
-        </View>
-      </View>
-    </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  centerContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
+  authText: { fontSize: 16, marginBottom: 20 },
+  loginBtn: { backgroundColor: '#E57373', padding: 15, borderRadius: 10 },
+  loginBtnText: { color: '#FFF', fontWeight: 'bold' },
   container: { flex: 1, backgroundColor: '#FFF' },
-  header: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    paddingTop: 50, 
-    paddingBottom: 15, 
-    paddingHorizontal: 15, 
-    borderBottomWidth: 0.5, 
-    borderBottomColor: '#EEE' 
-  },
-  profilePic: { width: 40, height: 40, borderRadius: 20, marginLeft: 10 },
-  headerInfo: { marginLeft: 10, flex: 1 },
-  userName: { fontWeight: 'bold', fontSize: 16 },
-  activeStatus: { fontSize: 12, color: '#888' },
-  headerIcons: { flexDirection: 'row' },
-  chatContainer: { flex: 1, padding: 15 },
-  myMessageContainer: { alignItems: 'flex-end', marginBottom: 15 },
-  myMessage: { backgroundColor: '#000', padding: 12, borderRadius: 20, maxWidth: '80%' },
-  myMessageText: { color: '#FFF' },
-  timestamp: { textAlign: 'center', color: '#BBB', fontSize: 12, marginVertical: 20 },
-  otherMessageRow: { flexDirection: 'row', marginBottom: 15 },
-  miniPic: { width: 25, height: 25, borderRadius: 12.5, alignSelf: 'flex-end', marginRight: 8 },
-  otherMessage: { backgroundColor: '#F0F0F0', padding: 12, borderRadius: 15, marginBottom: 4, maxWidth: '85%' },
-  inputContainer: { padding: 15, paddingBottom: 30 },
-  inputWrapper: { 
-    flexDirection: 'row', 
-    backgroundColor: '#F9F9F9', 
-    borderRadius: 15, 
-    alignItems: 'center', 
-    paddingHorizontal: 15,
-    borderWidth: 1,
-    borderColor: '#EEE'
-  },
-  input: { flex: 1, height: 45 },
-  inputIcon: { marginLeft: 10 }
+  content: { padding: 20 },
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 15, color: '#000' },
+  pill: { backgroundColor: '#F08080', alignSelf: 'flex-start', paddingVertical: 8, paddingHorizontal: 20, borderRadius: 20, marginBottom: 25 },
+  pillText: { color: '#FFF', fontWeight: '600' },
+  item: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
+  dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#FF4081', marginRight: 10 },
+  avatar: { width: 50, height: 50, borderRadius: 25, marginRight: 15 },
+  textContainer: { flex: 1 },
+  username: { fontWeight: 'bold', fontSize: 15, color: '#333' },
+  time: { fontWeight: 'normal', color: '#AAA', fontSize: 13 },
+  action: { color: '#888', fontSize: 14, marginTop: 2 },
+  comment: { color: '#333', fontSize: 14, marginTop: 2 },
+  postThumbnail: { width: 50, height: 50, borderRadius: 10, marginLeft: 10 }
 });

@@ -1,112 +1,93 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 
-import { Collapsible } from '@/components/ui/collapsible';
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+export default function ExploreScreen() {
+  // Coordonatele pentru centrul hărții (am pus Timișoara, dar poți schimba)
+  const mapRegion = {
+    latitude: 45.7489,
+    longitude: 21.2087,
+    latitudeDelta: 0.05,
+    longitudeDelta: 0.05,
+  };
 
-export default function TabTwoScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
-        </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+    <SafeAreaView style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.logoTitle}>PawRadar</Text>
+        <Text style={styles.subtitle}>Search Area</Text>
+      </View>
+
+      <Text style={styles.alertText}>Lost pet near you!</Text>
+
+      {/* Containerul Hărții */}
+      <View style={styles.mapContainer}>
+        <MapView style={styles.map} initialRegion={mapRegion}>
+          
+          {/* Pin-ul principal (Roșu) */}
+          <Marker coordinate={{ latitude: 45.7489, longitude: 21.2087 }}>
+            <Ionicons name="location" size={50} color="#E53935" style={styles.mainPin} />
+          </Marker>
+
+          {/* Icoane cu Lăbuțe */}
+          <Marker coordinate={{ latitude: 45.7550, longitude: 21.1980 }}>
+            <View style={styles.pawMarker}><Ionicons name="paw" size={24} color="#333" /></View>
+          </Marker>
+          <Marker coordinate={{ latitude: 45.7410, longitude: 21.2150 }}>
+            <View style={styles.pawMarker}><Ionicons name="paw" size={24} color="#333" /></View>
+          </Marker>
+          <Marker coordinate={{ latitude: 45.7520, longitude: 21.2250 }}>
+            <View style={styles.pawMarker}><Ionicons name="paw" size={24} color="#333" /></View>
+          </Marker>
+
+          {/* Icoane cu Warning (Atenție) */}
+          <Marker coordinate={{ latitude: 45.7600, longitude: 21.2100 }}>
+            <Ionicons name="warning" size={45} color="#FFCA28" />
+          </Marker>
+          <Marker coordinate={{ latitude: 45.7400, longitude: 21.1900 }}>
+            <Ionicons name="warning" size={45} color="#FFCA28" />
+          </Marker>
+
+        </MapView>
+      </View>
+
+      {/* Butonul de jos */}
+      <TouchableOpacity style={styles.helpButton}>
+        <Text style={styles.helpText}>HELP FIND THE PET!!</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: { flex: 1, backgroundColor: '#FFF', alignItems: 'center' },
+  header: { marginTop: 40, alignItems: 'center', marginBottom: 20 },
+  logoTitle: { fontSize: 24, fontWeight: 'bold', color: '#F08080' },
+  subtitle: { fontSize: 20, color: '#F08080' },
+  alertText: { fontSize: 22, fontWeight: 'bold', color: '#F08080', marginBottom: 20 },
+  mapContainer: {
+    width: '90%',
+    height: 400, // Înălțimea hărții
+    overflow: 'hidden',
   },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
+  map: { width: '100%', height: '100%' },
+  mainPin: {
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 1, height: 3 },
+    textShadowRadius: 5
   },
+  pawMarker: {
+    backgroundColor: '#FFF',
+    padding: 8,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 4,
+  },
+  helpButton: { marginTop: 30, padding: 15 },
+  helpText: { fontSize: 20, fontWeight: 'bold', color: '#F08080' }
 });
