@@ -23,11 +23,16 @@ const PostMarker = ({ post, onPress }) => {
       pinColor={getPinColor(post)}
       onPress={onPress}
     >
-      {post.type === 'MISSING' ? (
-        <View style={styles.pawWrapper}>
+      {post.type === 'MISSING' && (
+        <View style={[styles.pawWrapper, styles.missingPaw]}>
           <Text style={styles.pawText}>🐾</Text>
         </View>
-      ) : null}
+      )}
+      {post.type === 'FOUND' && (
+        <View style={[styles.pawWrapper, styles.foundPaw]}>
+          <Text style={styles.pawText}>🐾</Text>
+        </View>
+      )}
     </Marker>
   );
 };
@@ -37,7 +42,6 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#E57373',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -45,6 +49,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 4,
+  },
+  missingPaw: {
+    backgroundColor: '#E57373',
+  },
+  foundPaw: {
+    backgroundColor: '#43A047',
   },
   pawText: {
     fontSize: 18,

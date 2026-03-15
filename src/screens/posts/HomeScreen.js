@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
   Dimensions,
 } from 'react-native';
-import { COLORS } from '../../utils/constants';
+import { COLORS, POST_STATUS } from '../../utils/constants';
 import usePosts from '../../hooks/usePosts';
 import MissingPostCard from '../../components/posts/MissingPostCard';
 import MatingCard from '../../components/posts/MatingCard';
@@ -28,9 +28,9 @@ const SECTION_CONFIG = [
 const HomeScreen = ({ navigation }) => {
   const { posts, loading } = usePosts(['MISSING', 'FOUND', 'ADOPTION']);
 
-  const missingPosts = posts.filter((p) => p.type === 'MISSING');
-  const foundPosts = posts.filter((p) => p.type === 'FOUND');
-  const adoptionPosts = posts.filter((p) => p.type === 'ADOPTION');
+  const missingPosts = posts.filter((p) => p.type === 'MISSING' && p.status !== POST_STATUS.RESOLVED && p.status !== POST_STATUS.CLOSED);
+  const foundPosts = posts.filter((p) => p.type === 'FOUND' && p.status !== POST_STATUS.RESOLVED && p.status !== POST_STATUS.CLOSED);
+  const adoptionPosts = posts.filter((p) => p.type === 'ADOPTION' && p.status !== POST_STATUS.RESOLVED && p.status !== POST_STATUS.CLOSED);
 
   const renderSmallCard = (item, type) => {
     const uri = item.photos?.[0] || item.pet?.photoURL || 'https://via.placeholder.com/300';

@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, Image, TouchableOpacity } from 'react-native';
 import usePosts from '../../hooks/usePosts';
 import MissingPostCard from '../../components/posts/MissingPostCard';
 import MatingCard from '../../components/posts/MatingCard';
-import { COLORS } from '../../utils/constants';
+import { COLORS, POST_STATUS } from '../../utils/constants';
 
 const SECTION_TITLES = {
   MISSING: 'Missing Pets',
@@ -14,33 +14,42 @@ const SECTION_TITLES = {
 const SectionListScreen = ({ route, navigation }) => {
   const { sectionType } = route.params || { sectionType: 'MISSING' };
   const { posts, loading, fetchMore } = usePosts(sectionType);
+  const visiblePosts = posts.filter(
+    (p) => p.status !== POST_STATUS.RESOLVED && p.status !== POST_STATUS.CLOSED
+  );
 
   const renderItem = ({ item }) => {
+    const goToDetail = () => navigation.navigate('PostDetail', { post: item });
+
     if (item.type === 'MISSING') {
-      return <MissingPostCard post={item} />;
+      return (
+        <TouchableOpacity activeOpacity={0.9} onPress={goToDetail}>
+          <MissingPostCard post={item} />
+        </TouchableOpacity>
+      );
     }
     if (item.type === 'FOUND') {
       return (
-        <View style={styles.card}>
+        <TouchableOpacity style={styles.card} activeOpacity={0.9} onPress={goToDetail}>
           {item.photos?.[0] ? (
             <Image source={{ uri: item.photos[0] }} style={styles.cardImage} />
           ) : null}
           <Text style={styles.cardTitle}>Found animal</Text>
           {item.locationName ? <Text style={styles.cardLocation}>📍 {item.locationName}</Text> : null}
           <Text style={styles.cardDescription}>{item.description || 'No description.'}</Text>
-        </View>
+        </TouchableOpacity>
       );
     }
     if (item.type === 'ADOPTION') {
       return (
-        <View style={styles.card}>
+        <TouchableOpacity style={styles.card} activeOpacity={0.9} onPress={goToDetail}>
           {item.photos?.[0] ? (
             <Image source={{ uri: item.photos[0] }} style={styles.cardImage} /> 
           ) : null}
           <Text style={styles.cardTitle}>For adoption</Text>
           {item.locationName ? <Text style={styles.cardLocation}>📍 {item.locationName}</Text> : null}
           <Text style={styles.cardDescription}>{item.description || 'No description.'}</Text>
-        </View>
+        </TouchableOpacity>
       );
     }
     if (item.type === 'MATING') {
@@ -49,7 +58,7 @@ const SectionListScreen = ({ route, navigation }) => {
     return null;
   };
 
-  if (!loading && posts.length === 0) {
+  if (!loading && visiblePosts.length === 0) {
     return (
       <View style={styles.container}>
         <Text style={styles.sectionTitle}>{SECTION_TITLES[sectionType] || sectionType}</Text>
@@ -63,17 +72,15 @@ const SectionListScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>{SECTION_TITLES[sectionType] || sectionType}</Text>
-      {loading && posts.length === 0 ? (
+      {loading && visiblePosts.length === 0 ? (
         <View style={styles.emptyContainer}>
           <ActivityIndicator size="large" color={COLORS.primary} />
         </View>
       ) : (
         <FlatList
-          data={posts}
+          data={visiblePosts}
           renderItem={renderItem}
           keyExtractor={item => item.id}
-          onEndReached={fetchMore}
-          onEndReachedThreshold={0.5}
           ListFooterComponent={loading ? <ActivityIndicator size="small" color={COLORS.primary} /> : null}
         />
       )}

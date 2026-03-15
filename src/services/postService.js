@@ -22,7 +22,6 @@ export const createMissingPost = async (formData, selectedPet, location) => {
     geohash,
     locationName: formData.locationName,
     lastSeenDate: serverTimestamp(),
-    reward: formData.reward || 0,
     spottedLocations: [],
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),

@@ -12,7 +12,6 @@ const MissingPostCard = ({ post }) => {
         {post.locationName ? <Text style={styles.location}>📍 {post.locationName}</Text> : null}
         <Text style={styles.description}>{post.description}</Text>
         <View style={styles.badges}>
-          <Badge label={`Reward: ${post.reward} RON`} color="#4CAF50" />
           <Badge label={post.status} color="#f44336" />
         </View>
       </View>

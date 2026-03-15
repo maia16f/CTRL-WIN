@@ -3,12 +3,12 @@ import { GiftedChat, Bubble, Day, InputToolbar } from 'react-native-gifted-chat'
 import useChat from '../../hooks/useChat';
 import { sendMessage } from '../../services/chatService';
 import { useAuth } from '../../context/AuthContext';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, Text } from 'react-native';
 import { COLORS } from '../../utils/constants';
 
 const ChatScreen = ({ route }) => {
   const { conversationId } = route.params || {};
-  const { messages: rtdbMessages } = useChat(conversationId);
+  const { messages: rtdbMessages, loading } = useChat(conversationId);
   const { user } = useAuth();
   const [messages, setMessages] = useState([]);
 
@@ -30,13 +30,28 @@ const ChatScreen = ({ route }) => {
     if (!newMessages.length) return;
     const text = newMessages[0].text?.trim();
     if (!text) return;
-    // Afișează imediat mesajul în UI
-    setMessages((previousMessages) => GiftedChat.append(previousMessages, newMessages));
-    // Trimite către backend
-    sendMessage(conversationId, text);
-  }, [conversationId]);
+    
+    const messageToSend = {
+      ...newMessages[0],
+      user: { _id: user.uid },
+      createdAt: new Date(),
+    };
 
-  if (!user) return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator size="large" color="#E57373" /></View>;
+    setMessages((previousMessages) => GiftedChat.append(previousMessages, [messageToSend]));
+    sendMessage(conversationId, text);
+  }, [conversationId, user]);
+
+  if (loading) {
+    return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator size="large" color={COLORS.primary} /></View>;
+  }
+
+  if (!user) {
+    return <View style={{ flex: 1, justifyContent: 'center' }}><Text>Please log in.</Text></View>;
+  }
+  
+  if (!conversationId) {
+    return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><Text>Conversation not available.</Text></View>;
+  }
 
   return (
     <GiftedChat

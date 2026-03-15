@@ -1,6 +1,6 @@
 import { rtdb, auth, db } from '../config/firebase';
 import { ref, push, set } from 'firebase/database';
-import { collection, doc, getDoc, setDoc, updateDoc, query, where, orderBy, getDocs, limit } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc, updateDoc, query, where, orderBy, getDocs, limit, addDoc } from 'firebase/firestore';
 
 const conversationIdFromUsers = (uid1, uid2) => [uid1, uid2].sort().join('_');
 
@@ -28,6 +28,10 @@ export const getOrCreateConversation = async (otherUserId, postId = null) => {
 };
 
 export const sendMessage = async (conversationId, content, type = 'text', imageURL = null) => {
+  if (!auth.currentUser || !conversationId) {
+    console.error("User not authenticated or no conversation ID provided.");
+    return;
+  }
   const senderId = auth.currentUser.uid;
   const msgRef = ref(rtdb, `messages/${conversationId}`);
   const newMsgRef = push(msgRef);
@@ -41,9 +45,6 @@ export const sendMessage = async (conversationId, content, type = 'text', imageU
     timestamp: now,
     isRead: false,
   });
-
-  await set(ref(rtdb, `conversations/${conversationId}/lastMessage`), content);
-  await set(ref(rtdb, `conversations/${conversationId}/lastMessageTimestamp`), now);
 
   try {
     await updateDoc(doc(db, 'conversations', conversationId), {
@@ -65,7 +66,6 @@ export const sendMessage = async (conversationId, content, type = 'text', imageU
 
 /** List conversations for current user (for ChatList). */
 export const getConversationsForUser = async (uid, max = 50) => {
-  // Simplified query fără index compus: filtrăm după participant și sortăm local.
   const q = query(
     collection(db, 'conversations'),
     where('participants', 'array-contains', uid),

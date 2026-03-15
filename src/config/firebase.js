@@ -8,9 +8,10 @@ const firebaseConfig = {
   apiKey: "AIzaSyAbKq8FxdnXMdoPlWamvRRu2Z_SjrykE44",
   authDomain: "pawapp-30ed5.firebaseapp.com",
   projectId: "pawapp-30ed5",
-  storageBucket: "pawapp-30ed5.firebasestorage.app",
+  storageBucket: "pawapp-30ed5.appspot.com",
   messagingSenderId: "211909427191",
-  appId: "1:211909427191:web:b96bb828851ff11adb38f2"
+  appId: "1:211909427191:web:b96bb828851ff11adb38f2",
+  databaseURL: "https://pawapp-30ed5-default-rtdb.europe-west1.firebasedatabase.app"
 };
 
 export const app = initializeApp(firebaseConfig);

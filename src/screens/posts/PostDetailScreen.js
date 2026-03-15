@@ -78,24 +78,26 @@ const PostDetailScreen = ({ route }) => {
 
   const handleClosePost = async () => {
     if (!post?.id && !postId) return;
+    const isAdoption = post.type === 'ADOPTION';
     Alert.alert(
-      'Închide și șterge anunțul',
-      'Ești sigură că ai găsit animalul? Anunțul va fi marcat ca rezolvat și șters din listă.',
+      isAdoption ? 'Șterge animalul din adopție' : 'Închide anunțul',
+      isAdoption
+        ? 'Ești sigură că vrei să ștergi acest animal din lista de adopție?'
+        : 'Ești sigură că ai găsit animalul? Anunțul nu va mai apărea pe hartă sau pe Home.',
       [
         { text: 'Nu', style: 'cancel' },
         {
-          text: 'Da, am găsit animalul',
+          text: isAdoption ? 'Șterge animalul' : 'Da, am găsit animalul',
           style: 'destructive',
           onPress: async () => {
             setClosing(true);
             try {
               const id = post.id || postId;
-              // marchează ca RESOLVED pentru istoric, apoi șterge documentul
               await updateDoc(doc(db, 'posts', id), { status: POST_STATUS.RESOLVED });
-              await deleteDoc(doc(db, 'posts', id));
+              setPost(prev => (prev ? { ...prev, status: POST_STATUS.RESOLVED } : prev));
               navigation.goBack();
             } catch (e) {
-              console.warn('close/delete post failed', e);
+              console.warn('close post failed', e);
               setClosing(false);
             }
           },
@@ -135,7 +137,11 @@ const PostDetailScreen = ({ route }) => {
             activeOpacity={0.8}
           >
             <Text style={styles.messageButtonText}>
-              {isFound ? 'Cred că este animalul meu' : 'Trimite mesaj'}
+              {isFound
+                ? 'Cred că este animalul meu'
+                : isAdoption
+                ? 'Vreau să adopt acest animal'
+                : 'Trimite mesaj'}
             </Text>
           </TouchableOpacity>
         )}
