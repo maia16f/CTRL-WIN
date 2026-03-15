@@ -10,6 +10,7 @@ const AddPetScreen = ({ navigation }) => {
   const [species, setSpecies] = useState('dog');
   const [breed, setBreed] = useState('');
   const [age, setAge] = useState('');
+  const [ageUnit, setAgeUnit] = useState('luni');
   const [gender, setGender] = useState('male');
   const [photoURI, setPhotoURI] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,7 @@ const AddPetScreen = ({ navigation }) => {
 
   const handleAddPet = async () => {
     if (!name || !breed || !age) {
-      Alert.alert('Eroare', 'Te rugăm să completezi toate câmpurile obligatorii.');
+      Alert.alert('Error', 'Please fill in all required fields.');
       return;
     }
 
@@ -32,21 +33,22 @@ const AddPetScreen = ({ navigation }) => {
         photoURL = await uploadPhoto(photoURI, `pets/${auth.currentUser.uid}`);
       }
 
+      const ageMonths = ageUnit === 'ani' ? parseInt(age, 10) * 12 : parseInt(age, 10);
       await addDoc(collection(db, 'pets'), {
         ownerId: auth.currentUser.uid,
         name,
         species,
         breed,
-        age: parseInt(age, 10),
+        age: ageMonths,
         gender,
         photoURL,
         createdAt: serverTimestamp()
       });
 
-      Alert.alert('Succes', 'Animalul a fost adăugat cu succes!');
+      Alert.alert('Success', 'Pet has been added successfully!');
       navigation.goBack();
     } catch (error) {
-      Alert.alert('Eroare', 'Nu am putut adăuga animalul: ' + error.message);
+      Alert.alert('Error', 'Could not add pet: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -58,25 +60,53 @@ const AddPetScreen = ({ navigation }) => {
         {photoURI ? (
           <Image source={{ uri: photoURI }} style={styles.image} />
         ) : (
-          <Text style={styles.imagePickerText}>Adaugă o poză</Text>
+          <Text style={styles.imagePickerText}>Add a photo</Text>
         )}
       </TouchableOpacity>
 
-      <TextInput style={styles.input} placeholder="Numele animalului" value={name} onChangeText={setName} />
-      <TextInput style={styles.input} placeholder="Rasa" value={breed} onChangeText={setBreed} />
-      <TextInput style={styles.input} placeholder="Vârsta (în luni)" value={age} onChangeText={setAge} keyboardType="numeric" />
-      
+      <TextInput style={styles.input} placeholder="Pet name" value={name} onChangeText={setName} />
+      <TextInput style={styles.input} placeholder="Breed" value={breed} onChangeText={setBreed} />
+
+      <Text style={styles.label}>Age</Text>
+      <View style={styles.row}>
+        <TextInput
+          style={[styles.input, styles.ageInput]}
+          placeholder="Number"
+          value={age}
+          onChangeText={setAge}
+          keyboardType="numeric"
+        />
+        <View style={styles.unitRow}>
+          <TouchableOpacity style={[styles.selector, ageUnit === 'luni' && styles.selected]} onPress={() => setAgeUnit('luni')}>
+            <Text style={styles.selectorText}>Months</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.selector, ageUnit === 'ani' && styles.selected]} onPress={() => setAgeUnit('ani')}>
+            <Text style={styles.selectorText}>Years</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <Text style={styles.label}>Gender</Text>
+      <View style={styles.row}>
+        <TouchableOpacity style={[styles.selector, gender === 'male' && styles.selected]} onPress={() => setGender('male')}>
+          <Text style={styles.selectorText}>Male</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.selector, gender === 'female' && styles.selected]} onPress={() => setGender('female')}>
+          <Text style={styles.selectorText}>Female</Text>
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.row}>
         <TouchableOpacity style={[styles.selector, species === 'dog' && styles.selected]} onPress={() => setSpecies('dog')}>
-          <Text style={styles.selectorText}>Câine</Text>
+          <Text style={styles.selectorText}>Dog</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.selector, species === 'cat' && styles.selected]} onPress={() => setSpecies('cat')}>
-          <Text style={styles.selectorText}>Pisică</Text>
+          <Text style={styles.selectorText}>Cat</Text>
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity style={styles.button} onPress={handleAddPet} disabled={loading}>
-        <Text style={styles.buttonText}>{loading ? 'Se adaugă...' : 'Adaugă Animal'}</Text>
+        <Text style={styles.buttonText}>{loading ? 'Adding...' : 'Add pet'}</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -85,7 +115,10 @@ const AddPetScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: COLORS.background },
   input: { backgroundColor: COLORS.white, padding: 15, borderRadius: 8, marginBottom: 15, borderWidth: 1, borderColor: '#ddd' },
-  row: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 },
+  label: { fontSize: 14, fontWeight: '600', color: COLORS.textDark, marginBottom: 8 },
+  row: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
+  ageInput: { flex: 1, marginRight: 10, marginBottom: 0 },
+  unitRow: { flexDirection: 'row', flex: 1 },
   selector: { flex: 1, padding: 15, alignItems: 'center', backgroundColor: COLORS.white, borderRadius: 8, marginHorizontal: 5, borderWidth: 1, borderColor: '#ddd' },
   selected: { backgroundColor: COLORS.secondary, borderColor: COLORS.primary },
   selectorText: { fontWeight: 'bold', color: COLORS.textDark },

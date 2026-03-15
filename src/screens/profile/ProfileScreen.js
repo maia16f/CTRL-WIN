@@ -37,9 +37,8 @@ const ProfileScreen = ({ navigation }) => {
       <View style={styles.header}>
         <Avatar source={{ uri: userProfile.photoURL || 'https://via.placeholder.com/150' }} style={styles.avatar} />
         <View style={styles.info}>
-          <Text style={styles.name}>{userProfile.displayName || 'Utilizator Anonim'}</Text>
+          <Text style={styles.name}>{userProfile.displayName || 'Anonymous User'}</Text>
           <Text style={styles.email}>{userProfile.email}</Text>
-          <Text style={styles.points}>✨ {userProfile.communityPoints} Puncte</Text>
         </View>
         <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
           <Text style={styles.logoutText}>Logout</Text>
@@ -48,9 +47,9 @@ const ProfileScreen = ({ navigation }) => {
 
       <View style={styles.petsSection}>
         <View style={styles.petsHeader}>
-          <Text style={styles.sectionTitle}>Animalele mele</Text>
+          <Text style={styles.sectionTitle}>My pets</Text>
           <TouchableOpacity onPress={() => navigation.navigate('AddPet')}>
-            <Text style={styles.addText}>+ Adaugă</Text>
+            <Text style={styles.addText}>+ Add</Text>
           </TouchableOpacity>
         </View>
         
@@ -67,7 +66,7 @@ const ProfileScreen = ({ navigation }) => {
                 <Text style={styles.petName}>{item.name}</Text>
               </TouchableOpacity>
             )}
-            ListEmptyComponent={<Text style={styles.emptyText}>Nu ai adăugat niciun animal încă.</Text>}
+            ListEmptyComponent={<Text style={styles.emptyText}>You haven't added any pets yet.</Text>}
           />
         )}
       </View>
@@ -110,10 +109,6 @@ const styles = StyleSheet.create({
   email: {
     color: COLORS.textLight,
     marginBottom: 5,
-  },
-  points: {
-    color: COLORS.warning,
-    fontWeight: 'bold',
   },
   logoutButton: {
     padding: 10,

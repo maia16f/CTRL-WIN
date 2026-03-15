@@ -13,6 +13,8 @@ import PetProfileScreen from '../screens/profile/PetProfileScreen';
 import EditProfileScreen from '../screens/profile/EditProfileScreen';
 import CreateMatingPostScreen from '../screens/love-radar/CreateMatingPostScreen';
 import MatingDetailScreen from '../screens/love-radar/MatingDetailScreen';
+import SectionListScreen from '../screens/posts/SectionListScreen';
+import PickLocationScreen from '../screens/map/PickLocationScreen';
 import { ActivityIndicator, View } from 'react-native';
 import { COLORS } from '../utils/constants';
 
@@ -21,16 +23,18 @@ const Stack = createStackNavigator();
 const AppStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="MainTabs" component={MainTabs} />
-    <Stack.Screen name="PostDetail" component={PostDetailScreen} options={{ headerShown: true, title: 'Detalii Anunț' }} />
-    <Stack.Screen name="PostTypeSelector" component={PostTypeSelector} options={{ headerShown: true, title: 'Tip Anunț' }} />
-    <Stack.Screen name="CreatePost" component={CreatePostScreen} options={{ headerShown: true, title: 'Creare Anunț' }} />
-    <Stack.Screen name="ChatList" component={ChatListScreen} options={{ headerShown: true, title: 'Mesaje' }} />
+    <Stack.Screen name="PostDetail" component={PostDetailScreen} options={{ headerShown: true, title: 'Post details' }} />
+    <Stack.Screen name="PostTypeSelector" component={PostTypeSelector} options={{ headerShown: true, title: 'Post type' }} />
+    <Stack.Screen name="CreatePost" component={CreatePostScreen} options={{ headerShown: true, title: 'Create post' }} />
+    <Stack.Screen name="PickLocation" component={PickLocationScreen} options={{ headerShown: true, title: 'Alege locația' }} />
+    <Stack.Screen name="ChatList" component={ChatListScreen} options={{ headerShown: true, title: 'Messages' }} />
     <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: true, title: 'Chat' }} />
-    <Stack.Screen name="AddPet" component={AddPetScreen} options={{ headerShown: true, title: 'Adaugă Animal' }} />
-    <Stack.Screen name="PetProfile" component={PetProfileScreen} options={{ headerShown: true, title: 'Profil Animal' }} />
-    <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: true, title: 'Editare Profil' }} />
-    <Stack.Screen name="CreateMatingPost" component={CreateMatingPostScreen} options={{ headerShown: true, title: 'Anunț Montă' }} />
-    <Stack.Screen name="MatingDetail" component={MatingDetailScreen} options={{ headerShown: true, title: 'Detalii Montă' }} />
+    <Stack.Screen name="AddPet" component={AddPetScreen} options={{ headerShown: true, title: 'Add pet' }} />
+    <Stack.Screen name="PetProfile" component={PetProfileScreen} options={{ headerShown: true, title: 'Pet profile' }} />
+    <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: true, title: 'Edit profile' }} />
+    <Stack.Screen name="CreateMatingPost" component={CreateMatingPostScreen} options={{ headerShown: true, title: 'Mating post' }} />
+    <Stack.Screen name="MatingDetail" component={MatingDetailScreen} options={{ headerShown: true, title: 'Mating details' }} />
+    <Stack.Screen name="SectionList" component={SectionListScreen} options={({ route }) => ({ headerShown: true, title: route.params?.sectionTitle || 'More' })} />
   </Stack.Navigator>
 );
 

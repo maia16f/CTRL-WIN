@@ -20,8 +20,8 @@ export const sendNotification = async ({ recipientUid, title, body, data }) => {
 export const sendSpottedNotification = async (authorId, petName, locationName, postId) => {
   await sendNotification({
     recipientUid: authorId,
-    title: '🐾 Animalul tău a fost văzut!',
-    body: `Cineva l-a văzut pe ${petName} în zona ${locationName}`,
+    title: '🐾 Your pet was spotted!',
+    body: `Someone saw ${petName} in ${locationName}`,
     data: { postId, type: 'SPOTTED' }
   });
 };
@@ -29,8 +29,8 @@ export const sendSpottedNotification = async (authorId, petName, locationName, p
 export const sendFoundNotification = async (authorId, petName, postId) => {
   await sendNotification({
     recipientUid: authorId,
-    title: `🎉 ${petName} a fost găsit!`,
-    body: `Cineva l-a recuperat. Accesează chat-ul pentru detalii.`,
+    title: `🎉 ${petName} was found!`,
+    body: `Someone recovered them. Check the chat for details.`,
     data: { postId, type: 'FOUND' }
   });
 };
@@ -38,8 +38,18 @@ export const sendFoundNotification = async (authorId, petName, postId) => {
 export const sendChatNotification = async (recipientUid, senderName, content, conversationId) => {
   await sendNotification({
     recipientUid,
-    title: `Mesaj nou de la ${senderName}`,
+    title: `New message from ${senderName}`,
     body: content.length > 50 ? content.substring(0, 47) + '...' : content,
     data: { conversationId, type: 'CHAT' }
+  });
+};
+
+/** Notify users that a lost animal was posted near them (within ~500m). */
+export const sendLostAnimalNearbyNotification = async (recipientUid, locationName, postId) => {
+  await sendNotification({
+    recipientUid,
+    title: '🐾 Animal în zona ta!',
+    body: locationName ? `Un animal pierdut a fost raportat în: ${locationName}` : 'Un animal pierdut a fost raportat în zona ta.',
+    data: { postId, type: 'LOST_NEARBY' }
   });
 };

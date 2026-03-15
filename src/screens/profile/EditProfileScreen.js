@@ -16,10 +16,10 @@ const EditProfileScreen = ({ navigation }) => {
       await updateDoc(doc(db, 'users', user.uid), {
         displayName
       });
-      Alert.alert('Succes', 'Profilul a fost actualizat!');
+      Alert.alert('Success', 'Profile has been updated!');
       navigation.goBack();
     } catch (error) {
-      Alert.alert('Eroare', 'Nu am putut actualiza profilul: ' + error.message);
+      Alert.alert('Error', 'Could not update profile: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -27,15 +27,15 @@ const EditProfileScreen = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.label}>Nume de afișare</Text>
+      <Text style={styles.label}>Display name</Text>
       <TextInput
         style={styles.input}
         value={displayName}
         onChangeText={setDisplayName}
-        placeholder="Numele tău"
+        placeholder="Your name"
       />
       <TouchableOpacity style={styles.button} onPress={handleSave} disabled={loading}>
-        <Text style={styles.buttonText}>{loading ? 'Se salvează...' : 'Salvează'}</Text>
+        <Text style={styles.buttonText}>{loading ? 'Saving...' : 'Save'}</Text>
       </TouchableOpacity>
     </ScrollView>
   );

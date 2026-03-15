@@ -6,7 +6,7 @@ export const Marker = () => null;
 const MapView = ({ children }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>🗺️ Harta interactivă este disponibilă doar pe telefon (Android/iOS).</Text>
+      <Text style={styles.text}>🗺️ Interactive map is only available on phone (Android/iOS).</Text>
       {/* Nu randam children (Markerele) pe web pentru a evita alte crash-uri */}
     </View>
   );

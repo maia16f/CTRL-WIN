@@ -14,13 +14,13 @@ const MatingDetailScreen = ({ route, navigation }) => {
         
         <View style={styles.detailsBox}>
           <Text style={styles.detailText}>🐾 Specie: {post.matingDetails?.species}</Text>
-          <Text style={styles.detailText}>🏷️ Rasă: {post.matingDetails?.breed}</Text>
-          <Text style={styles.detailText}>⚧ Gen: {post.matingDetails?.gender}</Text>
-          <Text style={styles.detailText}>💰 Preț: {post.matingDetails?.price} {post.matingDetails?.currency}</Text>
+          <Text style={styles.detailText}>🏷️ Breed: {post.matingDetails?.breed}</Text>
+          <Text style={styles.detailText}>⚧ Gender: {post.matingDetails?.gender}</Text>
+          <Text style={styles.detailText}>💰 Price: {post.matingDetails?.price} {post.matingDetails?.currency}</Text>
         </View>
 
         <TouchableOpacity style={styles.contactButton} onPress={() => navigation.navigate('Chat', { conversationId: `contact_${post.id}` })}>
-          <Text style={styles.contactButtonText}>Contactează Proprietarul</Text>
+          <Text style={styles.contactButtonText}>Contact owner</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

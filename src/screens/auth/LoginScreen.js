@@ -26,14 +26,14 @@ export default function LoginScreen({ navigation }) {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Eroare', 'Introdu email și parolă.');
+      Alert.alert('Error', 'Please enter email and password.');
       return;
     }
     try {
       await signInWithEmailAndPassword(auth, email, password);
       // Nu e nevoie de navigare explicită, AuthContext va face update și RootNavigator va randa MainTabs
     } catch (error) {
-      Alert.alert('Eroare la logare', error.message);
+      Alert.alert('Login error', error.message);
     }
   };
 
@@ -42,8 +42,8 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.content}>
         <Text style={styles.logoText}>PawRadar</Text>
         <View style={styles.authBox}>
-          <Text style={styles.title}>Autentificare</Text>
-          <Text style={styles.subtitle}>Conectează-te pentru a continua</Text>
+          <Text style={styles.title}>Sign in</Text>
+          <Text style={styles.subtitle}>Sign in to continue</Text>
           <TextInput
             style={styles.input}
             placeholder="Email"
@@ -54,28 +54,28 @@ export default function LoginScreen({ navigation }) {
           />
           <TextInput
             style={styles.input}
-            placeholder="Parolă"
+            placeholder="Password"
             value={password}
             onChangeText={setPassword}
             secureTextEntry
           />
           <TouchableOpacity style={styles.continueButton} onPress={handleLogin}>
-            <Text style={styles.continueText}>Conectare</Text>
+            <Text style={styles.continueText}>Sign in</Text>
           </TouchableOpacity>
           
           <TouchableOpacity style={styles.linkButton} onPress={() => navigation.navigate('Register')}>
-            <Text style={styles.linkText}>Nu ai cont? Înregistrează-te</Text>
+            <Text style={styles.linkText}>Don't have an account? Sign up</Text>
           </TouchableOpacity>
 
           <View style={styles.dividerContainer}>
             <View style={styles.line} />
-            <Text style={styles.dividerText}>sau</Text>
+            <Text style={styles.dividerText}>or</Text>
             <View style={styles.line} />
           </View>
 
           <TouchableOpacity style={styles.socialButton} onPress={() => promptAsync()}>
             <Ionicons name="logo-google" size={20} color="black" style={styles.socialIcon} />
-            <Text style={styles.socialText}>Continuă cu Google</Text>
+            <Text style={styles.socialText}>Continue with Google</Text>
           </TouchableOpacity>
         </View>
       </View>

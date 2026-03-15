@@ -1,4 +1,5 @@
 import * as ImagePicker from 'expo-image-picker';
+import { Platform } from 'react-native';
 
 // Aici vei pune datele tale de la Cloudinary
 const CLOUD_NAME = 'dvp1n047j'; // Înlocuiește cu Cloud Name-ul tău
@@ -19,17 +20,34 @@ export const pickImage = async () => {
 
 export const uploadPhoto = async (localUri, path) => {
   if (!localUri) return null;
-  
+
   const data = new FormData();
-  data.append('file', {
-    uri: localUri,
-    type: 'image/jpeg',
-    name: `upload_${Date.now()}.jpg`,
-  });
-  
+
+  if (Platform.OS === 'web') {
+    // Pe web folosim blob + File, cum cere fetch + Cloudinary
+    try {
+      const resp = await fetch(localUri);
+      const blob = await resp.blob();
+      const file = new File([blob], `upload_${Date.now()}.jpg`, { type: blob.type || 'image/jpeg' });
+      data.append('file', file);
+    } catch (e) {
+      console.warn('Fetch blob for upload failed, trying fallback as uri:', e);
+      data.append('file', {
+        uri: localUri,
+        type: 'image/jpeg',
+        name: `upload_${Date.now()}.jpg`,
+      });
+    }
+  } else {
+    // iOS / Android – varianta clasică, stabilă
+    data.append('file', {
+      uri: localUri,
+      type: 'image/jpeg',
+      name: `upload_${Date.now()}.jpg`,
+    });
+  }
+
   data.append('upload_preset', UPLOAD_PRESET);
-  
-  // Cloudinary poate organiza pozele în foldere folosind 'folder'
   if (path) {
     data.append('folder', `pawradar/${path}`);
   }
@@ -39,16 +57,14 @@ export const uploadPhoto = async (localUri, path) => {
       method: 'POST',
       body: data,
     });
-    
+
     const result = await response.json();
-    
     if (result.error) {
-      throw new Error(result.error.message);
+      throw new Error(result.error.message || 'Upload failed');
     }
-    
-    return result.secure_url; // Returnează URL-ul public al imaginii
+    return result.secure_url;
   } catch (error) {
-    console.error("Cloudinary Upload Error:", error);
+    console.error('Cloudinary Upload Error:', error);
     throw error;
   }
 };

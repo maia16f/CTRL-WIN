@@ -71,13 +71,8 @@ const LoveRadarScreen = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Love Radar ❤️</Text>
-        <TouchableOpacity style={styles.createButton} onPress={() => navigation.navigate('CreateMatingPost')}>
-          <Text style={styles.createText}>+ Adaugă Anunț</Text>
-        </TouchableOpacity>
       </View>
-      
-      {/* Aici ar putea veni un UI pentru filtre */}
-      
+
       {loading ? (
         <ActivityIndicator size="large" color={COLORS.primary} style={{ marginTop: 50 }} />
       ) : (
@@ -85,7 +80,7 @@ const LoveRadarScreen = ({ navigation }) => {
           data={posts}
           renderItem={({ item }) => <MatingCard post={item} userLocation={userLocation} navigation={navigation} />}
           keyExtractor={item => item.id}
-          ListEmptyComponent={<Text style={styles.emptyText}>Nu am găsit parteneri care să corespundă criteriilor tale.</Text>}
+          ListEmptyComponent={<Text style={styles.emptyText}>No partners match your criteria yet.</Text>}
         />
       )}
     </View>
@@ -108,16 +103,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: COLORS.primary,
-  },
-  createButton: {
-    backgroundColor: COLORS.secondary,
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  createText: {
-    color: COLORS.textDark,
-    fontWeight: 'bold',
   },
   emptyText: {
     textAlign: 'center',

@@ -1,36 +1,108 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
+  Dimensions,
+} from 'react-native';
 import { COLORS } from '../../utils/constants';
 import usePosts from '../../hooks/usePosts';
-import PostCard from '../../components/posts/PostCard';
 import MissingPostCard from '../../components/posts/MissingPostCard';
+import MatingCard from '../../components/posts/MatingCard';
 
-const HomeScreen = () => {
-  const { posts, loading, fetchMore } = usePosts(['SOCIAL', 'ADOPTION', 'MISSING']);
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = width * 0.55;
+const CARD_MARGIN = 10;
 
-  const renderItem = ({ item }) => {
-    if (item.type === 'MISSING') {
-      return <MissingPostCard post={item} />;
-    }
-    return <PostCard post={item} />;
+const SECTION_CONFIG = [
+  { type: 'MISSING', title: 'Missing Pets' },
+  { type: 'FOUND', title: 'Found Pets' },
+  { type: 'ADOPTION', title: 'Adopt Animals' },
+];
+
+const HomeScreen = ({ navigation }) => {
+  const { posts, loading } = usePosts(['MISSING', 'FOUND', 'ADOPTION']);
+
+  const missingPosts = posts.filter((p) => p.type === 'MISSING');
+  const foundPosts = posts.filter((p) => p.type === 'FOUND');
+  const adoptionPosts = posts.filter((p) => p.type === 'ADOPTION');
+
+  const renderSmallCard = (item, type) => {
+    const uri = item.photos?.[0] || item.pet?.photoURL || 'https://via.placeholder.com/300';
+    const title = item.title || (type === 'FOUND' ? 'Found animal' : type === 'ADOPTION' ? 'For adoption' : 'Missing animal');
+    const subtitle = item.locationName || item.description?.slice(0, 40) || '';
+
+    return (
+      <TouchableOpacity
+        key={item.id}
+        style={styles.smallCard}
+        onPress={() => navigation.navigate('PostDetail', { post: item })}
+        activeOpacity={0.9}
+      >
+        <Image source={{ uri }} style={styles.smallCardImage} />
+        <Text style={styles.smallCardName} numberOfLines={1}>{title}</Text>
+        {subtitle ? <Text style={styles.smallCardLocation} numberOfLines={1}>{subtitle}</Text> : null}
+      </TouchableOpacity>
+    );
   };
+
+  const renderSection = (sectionType, sectionTitle, data) => (
+    <View style={styles.section} key={sectionType}>
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>{sectionTitle}</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('SectionList', { sectionType, sectionTitle })}
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        >
+          <Text style={styles.moreText}>more</Text>
+        </TouchableOpacity>
+      </View>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.horizontalList}
+      >
+        {data.length === 0 ? (
+          <Text style={styles.noItems}>No posts at the moment.</Text>
+        ) : (
+          data.slice(0, 10).map((item) => renderSmallCard(item, sectionType))
+        )}
+      </ScrollView>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Feed</Text>
-      {loading && posts.length === 0 ? (
-        <ActivityIndicator size="large" color={COLORS.primary} style={{ marginTop: 20 }} />
-      ) : (
-        <FlatList
-          data={posts}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-          onEndReached={fetchMore}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={loading ? <ActivityIndicator size="small" color={COLORS.primary} /> : null}
-          ListEmptyComponent={<Text style={styles.emptyText}>Nu există postări momentan.</Text>}
-        />
-      )}
+      <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
+        {/* Title above hero image */}
+        <View style={styles.heroHeader}>
+          <Text style={styles.appName}>PawRadar</Text>
+          <Text style={styles.tagline}>Bringing furry friends back home</Text>
+        </View>
+        {/* Hero image - puppy with paw treat */}
+        <View style={styles.bannerWrap}>
+          <Image
+            source={require('../../../assets/hero.png')}
+            style={styles.bannerImage}
+            resizeMode="cover"
+          />
+        </View>
+
+        {/* Sections: Missing Pets, Found Pets, Adopt Animals */}
+        {SECTION_CONFIG.map(({ type, title }) => {
+          const data = type === 'MISSING' ? missingPosts : type === 'FOUND' ? foundPosts : adoptionPosts;
+          return renderSection(type, title, data);
+        })}
+
+        {loading && posts.length === 0 ? (
+          <ActivityIndicator size="large" color={COLORS.primary} style={{ marginVertical: 24 }} />
+        ) : null}
+      </ScrollView>
     </View>
   );
 };
@@ -39,19 +111,93 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
-    padding: 15,
   },
-  title: {
-    fontSize: 24,
+  scroll: {
+    flex: 1,
+  },
+  heroHeader: {
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 12,
+    backgroundColor: COLORS.background,
+  },
+  bannerWrap: {
+    width: '100%',
+    height: 220,
+    backgroundColor: COLORS.secondary,
+    overflow: 'hidden',
+  },
+  bannerImage: {
+    width: '100%',
+    height: '100%',
+  },
+  appName: {
+    fontSize: 26,
     fontWeight: 'bold',
     color: COLORS.primary,
-    marginBottom: 15,
   },
-  emptyText: {
-    textAlign: 'center',
+  tagline: {
+    fontSize: 14,
     color: COLORS.textLight,
-    marginTop: 50,
-  }
+    marginTop: 4,
+  },
+  section: {
+    marginTop: 24,
+    paddingLeft: 4,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    marginBottom: 12,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+  },
+  moreText: {
+    fontSize: 15,
+    color: COLORS.primary,
+    fontWeight: '600',
+  },
+  horizontalList: {
+    paddingHorizontal: 12,
+    paddingBottom: 8,
+  },
+  smallCard: {
+    width: CARD_WIDTH,
+    marginRight: CARD_MARGIN,
+    backgroundColor: COLORS.white,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  smallCardImage: {
+    width: '100%',
+    height: 140,
+    backgroundColor: '#eee',
+  },
+  smallCardName: {
+    paddingHorizontal: 10,
+    paddingTop: 8,
+    fontSize: 15,
+    fontWeight: '600',
+    color: COLORS.textDark,
+  },
+  smallCardLocation: {
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+    fontSize: 12,
+    color: COLORS.textLight,
+    marginTop: 2,
+  },
+  noItems: {
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    color: COLORS.textLight,
+    fontStyle: 'italic',
+  },
 });
 
 export default HomeScreen;

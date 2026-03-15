@@ -14,12 +14,12 @@ const MatingCard = ({ post, userLocation, navigation }) => {
       <View style={styles.card}>
         <Image source={{ uri: post.photos[0] }} style={styles.image} />
         <View style={styles.content}>
-          <Text style={styles.title}>{matingDetails.breed} • {matingDetails.gender === 'male' ? '♂' : '♀'}</Text>
-          <Text>{Math.round(matingDetails.age / 12)} ani</Text>
+          <Text style={styles.title}>{matingDetails.breed} {matingDetails.gender === 'male' ? '♂' : '♀'}</Text>
+          <Text>{Math.round(matingDetails.age / 12)} years</Text>
           {matingDetails.pedigree && <Badge label='Pedigree' color='gold' />}
-          <Text>{matingDetails.price === 0 ? 'Gratuit' : `${matingDetails.price} RON`}</Text>
+          <Text>{matingDetails.price === 0 ? 'Free' : `${matingDetails.price} RON`}</Text>
           <TouchableOpacity style={styles.button} onPress={() => openChat(post)}>
-            <Text style={styles.buttonText}>Contactează</Text>
+            <Text style={styles.buttonText}>Contact</Text>
           </TouchableOpacity>
         </View>
       </View>

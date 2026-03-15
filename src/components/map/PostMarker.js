@@ -1,13 +1,16 @@
 import React from 'react';
 import { Marker } from './MapWrapper';
+import { View, Text, StyleSheet } from 'react-native';
 
-const getPinColor = (createdAt) => {
-  if (!createdAt) return '#808080';
-  const hours = (Date.now() - createdAt.toMillis()) / 3600000;
-  if (hours < 24) return '#FF0000'; // Roșu — critic
-  if (hours < 72) return '#FF8C00'; // Portocaliu — recent
-  if (hours < 168) return '#FFD700'; // Galben — o săptămână
-  return '#808080'; // Gri — vechi
+export const MARKER_COLORS = {
+  MISSING: '#E53935',
+  FOUND: '#43A047',
+};
+
+const getPinColor = (post) => {
+  if (post.type === 'MISSING') return MARKER_COLORS.MISSING;
+  if (post.type === 'FOUND') return MARKER_COLORS.FOUND;
+  return '#808080';
 };
 
 const PostMarker = ({ post, onPress }) => {
@@ -17,10 +20,35 @@ const PostMarker = ({ post, onPress }) => {
         latitude: post.location.latitude,
         longitude: post.location.longitude,
       }}
-      pinColor={getPinColor(post.createdAt)}
+      pinColor={getPinColor(post)}
       onPress={onPress}
-    />
+    >
+      {post.type === 'MISSING' ? (
+        <View style={styles.pawWrapper}>
+          <Text style={styles.pawText}>🐾</Text>
+        </View>
+      ) : null}
+    </Marker>
   );
 };
+
+const styles = StyleSheet.create({
+  pawWrapper: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#E57373',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 4,
+  },
+  pawText: {
+    fontSize: 18,
+  },
+});
 
 export default PostMarker;

@@ -10,10 +10,10 @@ const PetProfileScreen = ({ route }) => {
       <Image source={{ uri: pet.photoURL || 'https://via.placeholder.com/300' }} style={styles.image} />
       <View style={styles.infoContainer}>
         <Text style={styles.name}>{pet.name}</Text>
-        <Text style={styles.detail}>🐾 Specie: {pet.species}</Text>
-        <Text style={styles.detail}>🏷️ Rasă: {pet.breed}</Text>
-        <Text style={styles.detail}>🎂 Vârstă: {pet.age} luni</Text>
-        <Text style={styles.detail}>⚧ Gen: {pet.gender === 'male' ? 'Mascul' : 'Femelă'}</Text>
+        <Text style={styles.detail}>🐾 Species: {pet.species}</Text>
+        <Text style={styles.detail}>🏷️ Breed: {pet.breed}</Text>
+        <Text style={styles.detail}>🎂 Age: {pet.age >= 12 ? `${Math.floor(pet.age / 12)} years` : `${pet.age} months`}</Text>
+        <Text style={styles.detail}>⚧ Gender: {pet.gender === 'male' ? 'Male' : 'Female'}</Text>
       </View>
     </ScrollView>
   );

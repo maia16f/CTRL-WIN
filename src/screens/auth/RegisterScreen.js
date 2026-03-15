@@ -12,7 +12,7 @@ export default function RegisterScreen({ navigation }) {
 
   const handleRegister = async () => {
     if (!email || !password || !name) {
-      Alert.alert('Eroare', 'Toate câmpurile sunt obligatorii.');
+      Alert.alert('Error', 'All fields are required.');
       return;
     }
     try {
@@ -33,18 +33,18 @@ export default function RegisterScreen({ navigation }) {
       
       // Nu e nevoie de navigare explicită, AuthContext va face update și RootNavigator va randa MainTabs
     } catch (error) {
-      Alert.alert('Eroare la înregistrare', error.message);
+      Alert.alert('Registration error', error.message);
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>Creare Cont Nou</Text>
+        <Text style={styles.title}>Create account</Text>
         
         <TextInput
           style={styles.input}
-          placeholder="Nume complet"
+          placeholder="Full name"
           value={name}
           onChangeText={setName}
         />
@@ -60,18 +60,18 @@ export default function RegisterScreen({ navigation }) {
         
         <TextInput
           style={styles.input}
-          placeholder="Parolă"
+          placeholder="Password"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
         />
         
         <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={styles.buttonText}>Înregistrare</Text>
+          <Text style={styles.buttonText}>Sign up</Text>
         </TouchableOpacity>
         
         <TouchableOpacity style={styles.linkButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.linkText}>Ai deja cont? Conectează-te</Text>
+          <Text style={styles.linkText}>Already have an account? Sign in</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

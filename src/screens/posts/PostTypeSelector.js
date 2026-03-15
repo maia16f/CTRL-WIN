@@ -9,7 +9,7 @@ const PostTypeSelector = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Alege tipul anunțului</Text>
+      <Text style={styles.title}>Choose post type</Text>
       {Object.values(POST_TYPES).map(type => (
         <TouchableOpacity key={type} style={styles.button} onPress={() => handleSelect(type)}>
           <Text style={styles.buttonText}>{type}</Text>
